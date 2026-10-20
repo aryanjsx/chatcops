@@ -9,7 +9,7 @@ function upstash(): { url: string; token: string } {
   return { url, token };
 }
 
-async function redis(command: string[]): Promise<any> {
+async function redis(command: string[]): Promise<unknown> {
   const { url, token } = upstash();
   const res = await fetch(url, {
     method: 'POST',
@@ -60,7 +60,7 @@ export async function incrementVisitors(
     return {today, total}
   `;
 
-  const result = await redis(['EVAL', script, String(keys.length), ...keys, String(ttl)]);
+  const result = (await redis(['EVAL', script, String(keys.length), ...keys, String(ttl)])) as [number, number];
   return { today: result[0], total: result[1] };
 }
 
